@@ -7,6 +7,7 @@ Currently contains functions:
 - `print_str` (`string pointer goes into R1, literally just prints string`)
 - `memcpy` (`destination pointer goes into R1, source pointer goes into R2, size goes into R3`)
 - `init_malloc` (`no arguments, required for malloc and free to work`)
+- `strcpy` (`R1 - destination, R2 - source`)
 - `render_string` (`R1 - string pointer`)
 
 # `malloc`
@@ -52,4 +53,26 @@ CAL .memcpy // now in R1 (.some_pointer) store some amount of chars from .str
 # `init_malloc`
 ```
 CAL .init_malloc // this simple
+```
+
+Example of project:
+===
+```
+bits == 16
+minreg 10
+minheap 0xfff // min reqs
+minstack 0xff
+
+imm r1 16
+cal .malloc
+psh r1
+imm r2 .data
+cal .strcpy
+pop r1
+cal .printf
+cal .render_string
+hlt
+
+.data
+dw [ "hello world" 0xa0 0 ]
 ```
