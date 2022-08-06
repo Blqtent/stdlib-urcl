@@ -7,6 +7,7 @@ Currently contains functions:
 - `print_str` (`string pointer goes into R1, literally just prints string`)
 - `memcpy` (`destination pointer goes into R1, source pointer goes into R2, size goes into R3`)
 - `init_malloc` (`no arguments, required for malloc and free to work`)
+- `render_string` (`R1 - string pointer, R2 - offset by x, R3 - offset by y`)
 
 # `malloc`
 ```
