@@ -12,17 +12,115 @@ minreg 10
 
 .main
     imm r1 100
-    imm r2 150
+    imm r2 50
     cal .window_create_reimplement
+    mov r8 r1
     imm r2 WHITE_PICO8
     cal .window_fill_reimplement
-    cal .window_render_reimplement
-    imm r2 1
-    imm r3 2
+    imm r2 100
+    imm r3 0
     imm r4 10
     imm r5 20
     cal .button_create
+    imm r2 8
+    cal .button_fill
+    mov r1 r8
+    cal .window_render_rereimplement
     ret
+
+.windows [ 0 0 0 0 0 0 0 0 0 0 ] // max 10 windows
+
+.window_render_rereimplement
+    psh r1 //window
+    psh r2
+    psh r3
+    llod r2 r1 1
+    llod r3 r1 2
+    lod r1 r1
+    cal .render_sprite
+    pop r3
+    pop r2
+    pop r1
+    psh r1
+    psh r2
+    psh r3
+    llod r2 r1 3 // buttons *
+    
+    .window_render_rereimplement__cycle
+        lod r3 r2
+        bre .window_render_rereimplement__end r3 0
+       // hlt
+        psh r1
+        psh r2
+        psh r3
+        mov r3 r1
+        mov r1 r2
+        mov r2 r3
+        cal .button_render
+        inc r2 r2
+        jmp .window_render_rereimplement__cycle
+    .window_render_rereimplement__end
+    pop r3
+    pop r2
+    pop r1
+    pop r3
+    pop r2
+    pop r1
+    ret
+
+.button_render
+    psh r1 // button*
+    psh r2 // window*
+    psh r3 // additional
+    psh r4
+    psh r5 // wx
+    psh r6 // wy
+    bre .button_render__end r1 0
+    llod r5 r2 1
+    llod r6 r2 2 // init of offsetted x & y
+    lod r1 r1
+    
+    llod r3 r1 0 // x
+    add r2 r3 r5
+    llod r4 r1 1 // y
+    add r3 r4 r6
+
+    llod r1 r1 4 // graphics*, but we need to get x and y into R2 and R3 first
+    cal .render_sprite
+    .button_render__end
+        pop r6
+        pop r5
+        pop r4
+        pop r3
+        pop r2
+        pop r1
+        ret
+
+.button_fill
+    psh r1 // button *
+    psh r2 // color
+    psh r3 // additional info
+    psh r4
+    psh r5
+    lod r1 r1
+    llod r1 r1 4 // graphics *
+    lod r4 r1
+    llod r5 r1 1
+    mlt r4 r4 r5
+    add r1 r1 2
+    .button_fill__loop1
+        str r1 r2
+        dec r4 r4
+        bre .button_fill__end r4 0
+        inc r1 r1
+        jmp .button_fill__loop1
+    .button_fill__end
+        pop r5
+        pop r4
+        pop r3
+        pop r2
+        pop r1
+        ret
 
 .index_of_0
     psh r1 // ptr
@@ -63,15 +161,19 @@ minreg 10
     lstr r1 3 r5
     mov r2 r1
     mlt r1 r4 r5
+    add r1 r1 2
     cal .malloc
+    str r1 r4
+    lstr r1 1 r5
     lstr r2 4 r1
     str r6 r2
+    mov r1 r6
     pop r6
     pop r5
     pop r4
     pop r3
     pop r2
-    pop r1
+    pop r9
     ret
 
 .window_create_reimplement
@@ -212,21 +314,16 @@ minreg 10
     .mouse_button_status
     dw 0
 
-
-
-.helloworld_str
-    dw ["+- 123456789;/;#@!$%^&*()[]{}<>/?|\\~`" 0xa0 0]
-
-.mouse_scan
-    psh r1
-    in r1 %MOUSE_X
-    lstr .mouse_x_y 0 r1
-    in r1 %MOUSE_Y
-    lstr .mouse_x_y 1 r1
-    in r1 %MOUSE_BUTTONS
-    str .mouse_button_status r1
-    pop r1
-    ret
+//.mouse_scan
+//    psh r1
+//    in r1 %MOUSE_X
+//    lstr .mouse_x_y 0 r1
+//    in r1 %MOUSE_Y
+//    lstr .mouse_x_y 1 r1
+//    in r1 %MOUSE_BUTTONS
+//    str .mouse_button_status r1
+//    pop r1
+//    ret
 
 .render_letter
     psh r1 //char
@@ -553,6 +650,7 @@ ret
     ret
 
 .render_sprite   
+    //@debug
     psh r1 // pointer
     psh r2 // off_x
     psh r3 // off_y
