@@ -8,7 +8,6 @@ Currently contains functions:
 - `memcpy` (`destination pointer goes into R1, source pointer goes into R2, size goes into R3`)
 - `init_malloc` (`no arguments, required for malloc and free to work`)
 - `strcpy` (`R1 - destination, R2 - source`)
-- `render_string` (`R1 - string pointer`)
 
 # `malloc`
 ```
