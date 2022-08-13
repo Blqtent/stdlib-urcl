@@ -1,4 +1,6 @@
 @define MALLOC_MAINP M0
+@define F16PI 0b0100001001001000
+@define F16E  0b0100000101110000
 
 .strlen
     psh r1 // str *
@@ -282,3 +284,150 @@ ret
 
 // FLOAT IMPLEMENTATION: 
 // SXXXXXMMMMMMMMMM
+
+.float_construct
+    psh r1 // main int
+    psh r2 // v
+    psh r3 // sig 
+    psh r4 // e
+    brl .float_construct__else1 r1 0x8000
+    and r2 r1 0x7fff
+    imm r3 1
+    jmp .float_construct__else1_conti
+    .float_construct__else1
+        mov r2 r1
+    .float_construct__else1_conti
+    bre .float_construct_end_0 r2 0
+    imm r4 25
+    bge .while_v_over2048 r2 2048
+    jmp .while_v_less1024
+    .while_v_over2048
+        rsh r2 r2
+        inc r4 r4
+        bge .while_v_over2048 r2 2048
+    .while_v_less1024pre
+    brl .while_v_less1024 r2 1024
+    jmp .while_end
+    .while_v_less1024
+    lsh r2 r2
+    dec r4 r4
+    brl .while_v_less1024 r2 1024
+    .while_end
+    bge .e_over_31 r4 31
+    bsl r3 r3 15
+    bsl r4 r4 10
+    and r2 r2 1023
+    or r2 r2 r3
+    or r2 r2 r4
+    mov r1 r2
+    pop r4
+    pop r3
+    pop r2
+    pop r9
+    ret
+    .e_over_31
+    bsl r3 r3 15
+    and r3 r3 0x8000
+    or r3 r3 0x7c00
+    mov r1 r3
+    pop r4
+    pop r3
+    pop r2
+    pop r9
+    ret
+    .float_construct_end_0
+        pop r4
+        pop r3
+        pop r2
+        pop r1
+        imm r1 0
+        ret
+
+.f16_from_short
+psh r1
+psh r2
+psh r3
+psh r4
+brg .f16_from_int__if1_else r3 0 
+sub r2 0 r1
+imm r3 1
+jmp .f16_from_int__if1_end
+.f16_from_int__if1_else
+mov r2 r1
+.f16_from_int__if1_end
+bre .f16_from_int__end0 r2 0
+imm r4 25
+brl .f16_from_int__while1_end r2 2048
+.f16_from_int__while1_start
+rsh r2 r2
+inc r4 r4
+bge .f16_from_int__while1_start r2 2048
+.f16_from_int__while1_end
+bge .f16_from_int__while2_end r2 1024
+.f16_from_int__while2_start
+lsh r2 r2
+dec r4 r4
+brl .f16_from_int__while2_start r2 1024
+.f16_from_int__while2_end
+bge .f16_from_int__if2 r4 31
+bsl r3 r3 15
+bsl r4 r4 10
+and r2 r2 1023
+or r2 r2 r3
+or r2 r2 r4
+mov r1 r2
+pop r4
+pop r3
+pop r2
+pop r9
+ret
+.f16_from_int__if2
+bsl r3 r3 15
+and r3 r3 0x8000
+or r3 r3 0x7c00
+mov r1 r3
+pop r4
+pop r3
+pop r2
+pop r9
+ret
+.f16_from_int__end0
+pop r4
+pop r3
+pop r2
+pop r1
+imm r1 0
+ret
+
+.f16_to_int
+psh r1 
+psh r2 
+psh r3
+psh r4 
+and r2 r1 1023 
+and r4 r1 0x7c00 
+setne r4 r4 0 
+and r4 r4 1 
+mlt r4 r4 1024 
+or r4 r4 r2
+and r2 r1 0x7c00
+bsr r2 r2 10
+sub r2 r2 25
+sbrl .f16_to_int__if1_else r2 0
+bre .f16_to_int__if1_end r2 0
+bsl r4 r4 r2
+jmp .f16_to_int__if1_end
+.f16_to_int__if1_else
+sub r2 0 r2
+bsr r4 r4 r2
+.f16_to_int__if1_end
+and r1 r1 0x8000
+brz .f16_to_int__end r1
+sub r4 0 r4
+.f16_to_int__end
+mov r1 r4
+pop r4
+pop r3
+pop r2
+pop r9
+ret
