@@ -884,13 +884,14 @@ sub r5 r5 10
 .f16_mul__while1 
 setge r1 r4 2048 
 and r1 r1 1 
+setne r2 r7 0
+and r2 r2 1
+or r1 r1 r2
 brz .f16_mul__while1_end r1
-psh r7 
 psh r7
 bsr r7 r7 1 
 bsr r4 r4 1 
 pop r8
-pop r7 
 bsl r8 r8 15 
 or r4 r4 r8
 inc r5 r5
