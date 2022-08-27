@@ -69,3 +69,15 @@ DW [ c1 d4    0 d2    0 d4 ]
 DW [ c1 d8    c1 d8   0 d8    c1 d8   0 d8    c1 d8   d1 d4 ]
 .end
 DW
+
+.play
+    SUB r1 len 20
+    OUT %NLEG r1
+    OUT %WAIT len
+    IN r0 %WAIT
+    RET
+
+.wait
+    OUT %WAIT len
+    IN r0 %WAIT
+    RET
