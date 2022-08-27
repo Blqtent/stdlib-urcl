@@ -9,3 +9,8 @@ MINREGS 8 //IDC WHAT YOU SAY SHUT UP I LIKE 8 REGS lol my bad
     //... IDGAF lol okie bye
     .assert_err
         hlt
+    .error
+        imm R1 error_str
+        cal printf
+    .error_str
+        dw ["Error, Exiting with code 0" 0]
