@@ -64,4 +64,8 @@ DW [ 0 d8     gs d8   a1 d8   c1 d8   0 d8    a1 d8   c1 d8   d1 d8 ]
 .bar12
 DW [ 0 d4     ds1 d4  0 d8    d1 d4   0 d8 ]
 .bar13
-DW [ c
+DW [ c1 d4    0 d2    0 d4 ]
+.bar14
+DW [ c1 d8    c1 d8   0 d8    c1 d8   0 d8    c1 d8   d1 d4 ]
+.end
+DW
