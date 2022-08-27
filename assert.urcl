@@ -8,9 +8,10 @@ MINREGS 8 //IDC WHAT YOU SAY SHUT UP I LIKE 8 REGS lol my bad
     bre .assert_err R1 R2 // literally it. ik complete shit not the actual assert macro but guess what? 
     //... IDGAF lol okie bye
     .assert_err
+        cal .error
         hlt
     .error
         imm R1 error_str
-        cal printf
+        cal .printf
     .error_str
         dw ["Error, Exiting with code 0" 0]
