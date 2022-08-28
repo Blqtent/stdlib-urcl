@@ -15,4 +15,4 @@ MINREGS 8 //IDC WHAT YOU SAY SHUT UP I LIKE 8 REGS lol my bad
         cal .printf
         ret
     .error_str
-        dw ["Error, Exiting with code 0" 0]
+        dw ["Assertion failed, terminating..." 0]
