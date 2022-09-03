@@ -1,3 +1,18 @@
+MINREG 16
+@DEFINE ax r16
+@DEFINE ay r15
+@DEFINE bx r14
+@DEFINE by r13
+@DEFINE dx r12
+@DEFINE dy r11
+@DEFINE sx r10
+@DEFINE sy r9
+@DEFINE cx r8
+@DEFINE cy r7
+@DEFINE x r6
+@DEFINE y r5
+@DEFINE i r4
+
 .draw_line // in ax, ay, bx, by; var dx, dy, sx, sy, cx, cy, x, y, i 
     MOV x ax
     MOV y ay
