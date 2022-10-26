@@ -59,6 +59,7 @@
         pop r1
         imm r1 0
         ret
+	
 //create f16 from short
 .f16_from_short
 		psh r1
